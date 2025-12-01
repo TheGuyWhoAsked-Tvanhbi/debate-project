@@ -1,0 +1,5 @@
+Flask==2.3.3
+google-cloud-storage==2.11.0  # Hoặc phiên bản mới nhất tại thời điểm bạn triển khai
+google-cloud-speech==2.21.0   # Hoặc phiên bản mới nhất
+google-auth==2.23.3           # Hoặc phiên bản mới nhất
+google-api-core==2.11.1       # Hoặc phiên bản mới nhất (thư viện phụ thuộc của google-cloud-speech)
