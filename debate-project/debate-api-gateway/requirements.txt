@@ -1,0 +1,5 @@
+Flask==2.3.3
+google-cloud-storage==2.11.0  # Hoặc phiên bản mới nhất
+requests
+google-auth==2.23.3
+google-api-core==2.11.1
