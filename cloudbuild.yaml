@@ -1,0 +1,16 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-repo/debate-processor:latest', './debate-cloud-run-job']
+  dir: '.'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-repo/debate-processor:latest']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'deploy', 'debate-cloud-run-job', '--image', 'asia-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-repo/debate-processor:latest', '--platform', 'managed', '--region', 'asia-east1', '--no-allow-unauthenticated', '--ingress', 'internal', '--memory', '1Gi', '--cpu', '1', '--timeout', '300', '--quiet']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-repo/api-gateway:latest', './debate-api-gateway']
+  dir: '.'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-repo/api-gateway:latest']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'deploy', 'debate-api-gateway', '--image', 'asia-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-repo/api-gateway:latest', '--platform', 'managed', '--region', 'asia-east1', '--allow-unauthenticated', '--ingress', 'all', '--memory', '512Mi', '--timeout', '360', '--set-env-vars', 'UPLOAD_BUCKET_NAME=debate-upload-bucket,CLOUD_RUN_JOB_URL=$(gcloud run services describe debate-cloud-run-job --platform managed --region asia-east1 --format="value(status.url)")', '--quiet']
